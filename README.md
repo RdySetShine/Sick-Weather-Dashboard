@@ -2,7 +2,7 @@
 
 ## Deployment URL
 
-url: 
+url: https://rdysetshine.github.io/Sick-Weather-Dashboard/
 
 ## Mock-Up
 
