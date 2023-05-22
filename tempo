@@ -1,0 +1,88 @@
+const form = document.querySelector('form');
+const cityInput = document.querySelector('#city-Input');
+const weatherList = document.querySelector('#weather-list');
+
+let city
+
+const apiKey = 'b597f5e5f54657c8bf6c7fabe873a3f3'; 
+form.addEventListener('submit', (event) => {
+
+event.preventDefault(); 
+
+city = cityInput.value;
+
+console.log(city);
+getData(); 
+
+});
+
+const getData = () => {
+
+    
+fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`)
+
+
+.then(response => response.json())
+
+.then(data => {
+
+console.log(data)
+
+const temperature = data.main.temp;
+const humidity = data.main.humidity;
+const windSpeed = data.wind.speed;
+const Day1Weather = document.querySelector('#day1')
+
+const iconURL = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
+
+Day1Weather.innerHTML = 
+`
+<li>Temperature: ${temperature}'C</li>
+<li>Humidity: ${humidity}%</li>
+<li>Wind Speed: ${windSpeed}km/h <img src=${iconURL}></li>
+`
+;})
+
+fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`)
+
+.then(response => response.json())
+
+.then(data => {
+
+console.log(data)
+
+for (var i = 0; i < data.list.length; i++) {
+
+  const newDate = data.list[i].dt_txt;
+
+if (newDate.split(" ").pop() === "12:00:00") {
+
+  console.log(data.list[i].main.temp);
+
+    const forecastWeather_Icon = data.list[i].weather[0].icon;
+    const forecast_temp = Math.floor(data.list[i].main.temp);
+    const forecast_humidity = data.list[i].main.humidity;
+    const forecast_windspeed = data.list[i].wind.speed;
+    const dtText = data.list[i].dt_txt;
+
+var createCard = document.createElement("div");
+
+  createCard.className =  "card-body";
+  createCard.innerHTML += `<h4>Future Forecast</h4>`;
+  createCard.innerHTML += `<p class="temp">Temp: ${forecast_temp} 'C`;
+  createCard.innerHTML += `<img src="https://openweathermap.org/img/w/${forecastWeather_Icon}.png">`
+  createCard.innerHTML += `<p>Humidity: ${forecast_humidity} %`;
+  createCard.innerHTML += `<p>Wind: ${forecast_windspeed} M/S`;
+  createCard.innerHTML += `<p>Date: ${dtText}`;
+  
+  document.querySelector("#day2").appendChild(createCard);
+
+}
+
+}
+
+});
+
+
+
+}
